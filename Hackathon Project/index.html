@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPM Notice Board</title>
+  <style>
+  /* ---------- Basic Styling ---------- */
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    color: #222;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  header {
+    background: linear-gradient(90deg, #003366 60%, #0055aa 100%);
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2.2em;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+
+  /* ---------- News Ticker ---------- */
+  .ticker {
+    background: linear-gradient(90deg, #ffcc00 80%, #ffe066 100%);
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    font-weight: 500;
+    color: #333;
+    border-bottom: 2px solid #ffd700;
+  }
+
+  .ticker p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 15s linear infinite;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* ---------- Search Bar ---------- */
+  .search-container {
+    text-align: center;
+    margin: 24px 0;
+  }
+
+  #search {
+    padding: 12px;
+    width: 55%;
+    border: 1.5px solid #0055aa;
+    border-radius: 8px;
+    font-size: 1em;
+    box-shadow: 0 1px 4px rgba(0,85,170,0.07);
+    outline: none;
+    transition: border 0.2s;
+  }
+  #search:focus {
+    border-color: #003366;
+  }
+
+  /* ---------- Notice Cards ---------- */
+  .notices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    padding: 32px;
+  }
+
+  .card {
+    background: linear-gradient(120deg, #fff 80%, #e0eafc 100%);
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,85,170,0.09);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 24px rgba(0,85,170,0.13);
+  }
+
+  /* ---------- Card Image Hover Effect ---------- */
+  .card-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,85,170,0.08);
+    background: #eee;
+    flex-shrink: 0;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .card-img:hover {
+    transform: scale(1.12) rotate(-2deg);
+    box-shadow: 0 8px 32px rgba(0,85,170,0.18);
+  }
+
+  .card-content {
+    flex: 1;
+  }
+
+  .date {
+    font-size: 0.95em;
+    color: #0055aa;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.18em;
+    color: #003366;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: #333;
+    font-size: 1em;
+  }
+
+  /* ---------- Dark Mode ---------- */
+  .dark-mode {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    color: #f4f4f9;
+  }
+
+  .dark-mode header {
+    background: linear-gradient(90deg, #232526 60%, #414345 100%);
+    color: #ffe066;
+  }
+
+  .dark-mode .ticker {
+    background: linear-gradient(90deg, #333 80%, #444 100%);
+    color: #ffe066;
+    border-bottom: 2px solid #ffe066;
+  }
+
+  .dark-mode .card-content,
+  .dark-mode p {
+    color: #f4f4f9;
+  }
+
+  .dark-mode .card {
+    background: linear-gradient(120deg, #333 80%, #232526 100%);
+    color: #f4f4f9;
+    box-shadow: 0 4px 16px rgba(255,255,255,0.04);
+  }
+
+  .dark-mode .card-img {
+    background: #222;
+  }
+
+  .dark-mode .date {
+    color: #ffe066;
+  }
+
+  .dark-mode h3 {
+    color: #ffe066;
+  }
+
+  .toggle-btn {
+    margin: 14px;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #003366 60%, #0055aa 100%);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,85,170,0.09);
+    transition: background 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: linear-gradient(90deg, #0055aa 60%, #003366 100%);
+  }
+  </style>
+  <script src="script.js"></script>
+</head>
+<body>
+
+  <!-- ---------- Header ---------- -->
+  <header>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 18px;">
+      <!-- Logo space: Replace src with your logo image -->
+      <img src="gpm logo.png" alt="College Logo" style="height: 54px; width: 54px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,85,170,0.10); background: #fff;">
+      <h1 style="margin: 0;">Government Polytechnic Mumbai Digital Notice Board</h1>
+    </div>
+  </header>
+
+  <!-- ---------- Logo ---------- -->
+  <div style="text-align:center; margin-top: 18px;">
+    <img src="gpm logo.png" alt="College Logo" style="height: 80px; width: 80px; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,85,170,0.10); background: #fff;">
+  </div>
+
+  <!-- ---------- News Ticker ---------- -->
+  <div class="ticker">
+    <p>📢 Exam Form Last Date: 15 Oct | 🎉 Sports Day: 20 Oct | 🏖️ Holiday on 2 Oct</p>
+  </div>
+
+  <!-- ---------- Dark Mode Toggle ---------- -->
+  <div style="text-align:center;">
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <!-- ---------- Search Bar ---------- -->
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search notices..." onkeyup="searchNotices()">
+  </div>
+
+  <!-- ---------- Notices Section ---------- -->
+  <div class="notices" id="notices">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=70&q=80" alt="Exam" class="card-img">
+      <div class="card-content">
+        <div class="date">12 Oct 2025</div>
+        <h3>Mid-Sem Exam Schedule Released</h3>
+        <p>Check the PDF for subject-wise timetable.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=70&q=80" alt="Fest" class="card-img">
+      <div class="card-content">
+        <div class="date">10 Oct 2025</div>
+        <h3>Annual Cultural Fest</h3>
+        <p>Registrations open for dance, music, drama events.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=70&q=80" alt="Library" class="card-img">
+      <div class="card-content">
+        <div class="date">05 Oct 2025</div>
+        <h3>Library Book Return Deadline</h3>
+        <p>Return all borrowed books before 15th October.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=70&q=80" alt="Holiday" class="card-img">
+      <div class="card-content">
+        <div class="date">02 Oct 2025</div>
+        <h3>Holiday: Gandhi Jayanti</h3>
+        <p>College will remain closed on 2nd October.</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
